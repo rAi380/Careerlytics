@@ -1,0 +1,96 @@
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: confirm-fade-in 0.15s ease;
+}
+
+.confirm-dialog {
+    background: #12151f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: confirm-scale-in 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    &__title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 0.5rem;
+    }
+
+    &__message {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 1.5rem;
+        line-height: 1.5;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.6rem;
+    }
+
+    &__btn {
+        padding: 0.55rem 1.1rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.15s ease, background 0.15s ease;
+
+        &--cancel {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.75);
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        &--danger {
+            background: #ef4444;
+            color: #fff;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+
+        &--primary {
+            background: var(--accent, #EC2461);
+            color: #fff;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+}
+
+@keyframes confirm-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes confirm-scale-in {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 420px) {
+    .confirm-dialog {
+        padding: 1.25rem;
+        max-width: 90vw;
+    }
+}

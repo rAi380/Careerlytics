@@ -1,7 +1,8 @@
-import { getAllInterviewReports, generateInterviewReport, getInterviewReportById,generateResumePdf } from "../services/interview.api"
+import { getAllInterviewReports, generateInterviewReport, getInterviewReportById,generateResumePdf, deleteInterviewReport,generateReportPdf } from "../services/interview.api"
 import {useContext,useEffect} from "react"
 import { InterviewContext } from "../Interview.content"
 import { useParams} from "react-router"
+import toast from 'react-hot-toast'
 
 export const useInterview = ()=>{
     const context = useContext(InterviewContext)
@@ -48,17 +49,18 @@ export const useInterview = ()=>{
             setReports(response.interviewReports)
         }catch (error){
             console.log(error)
+            toast.error("Failed to load your interview history")
         }finally{
             setLoading(false)
         }
-        return response.interviewReports
+        return response?.interviewReports
     }
 
     const getResumePdf = async (interviewReportId) => {
         setLoading(true)
         let response = null
         try{
-            response = await generateResumePdf({ inteviewReportId })
+            response = await generateResumePdf(interviewReportId)
             const url = window.URL.createObjectURL(new Blob([ response ], {type: "application/pdf"}))
             const link = document.createElement("a")
             link.href=url
@@ -72,6 +74,27 @@ export const useInterview = ()=>{
         }
     }
 
+    const getReportPdf = async (interviewReportId) => {
+    setLoading(true)
+    try {
+        const response = await generateReportPdf(interviewReportId)
+        const url = window.URL.createObjectURL(new Blob([response], { type: "application/pdf" }))
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", `interview_report_${interviewReportId}.pdf`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        window.URL.revokeObjectURL(url)
+        toast.success("Report downloaded")
+    } catch (error) {
+        console.log(error)
+        toast.error("Failed to download report")
+    } finally {
+        setLoading(false)
+    }
+}
+
     useEffect(()=>{
         if(interviewId){
             getReportById(interviewId)
@@ -79,5 +102,15 @@ export const useInterview = ()=>{
             getReports()
         }
     },[interviewId])
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
+
+    const deleteReport = async (interviewId) =>{
+        try{
+            await deleteInterviewReport(interviewId)
+            setReports(prev => prev.filter(r => r._id !== interviewId))
+        }catch (error){
+            console.error("Error deleting interview report:", error)
+        }
+    }
+
+    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf,deleteReport, getReportPdf }
 }

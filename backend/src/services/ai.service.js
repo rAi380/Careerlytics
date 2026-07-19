@@ -4,7 +4,9 @@ const { zodToJsonSchema } = require("zod-to-json-schema")
 const puppeteer = require("puppeteer")
 const ai = new GoogleGenAI({
     apiKey: process.env.Google_GENAI_API_KEY
+    
 })
+console.log("API KEY LOADED:", !!process.env.Google_GENAI_API_KEY)
 
 const interviewReportSchema = z.object({
     matchScore:z.number().describe("The match score between the candidate and the job description, ranging from 0 to 100"),
@@ -33,12 +35,6 @@ const interviewReportSchema = z.object({
 
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-
-
-    // const prompt = `Generate an interview report for a candidate with the following details:
-    //                     Resume: ${resume}
-    //                     Self Description: ${selfDescription}
-    //                     Job Description: ${jobDescription}`
     const prompt = `
 You are an experienced technical recruiter.
 
@@ -122,4 +118,73 @@ async function generateResumePdf({resume,selfDescription,jobDescription}){
     return pdfBuffer
 }
 
-module.exports = {generateInterviewReport,generateResumePdf}
+async function buildReportHtml(report) {
+    const { title, matchScore, technicalQuestions, behavioralQuestions, skillGaps, preparationPlan } = report
+
+    const questionsHtml = (list, label) => list.map((q, i) => `
+        <div class="question">
+            <p class="q-label">${label} Q${i + 1}</p>
+            <p class="q-text">${q.question}</p>
+            <p class="q-meta"><strong>Intention:</strong> ${q.intention}</p>
+            <p class="q-meta"><strong>Model Answer:</strong> ${q.answer}</p>
+        </div>
+    `).join("")
+
+    const skillGapsHtml = skillGaps.map(g => `
+        <li><strong>${g.skill}</strong> — <span class="severity-${g.severity.toLowerCase()}">${g.severity}</span></li>
+    `).join("")
+
+    const planHtml = preparationPlan.map(d => `
+        <div class="plan-day">
+            <p class="plan-day-title">Day ${d.day}: ${d.focus}</p>
+            <ul>${d.tasks.map(t => `<li>${t}</li>`).join("")}</ul>
+        </div>
+    `).join("")
+
+    return `
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 30px; line-height: 1.5; }
+            h1 { color: #ff2d78; margin-bottom: 4px; }
+            .score { font-size: 20px; font-weight: bold; margin-bottom: 24px; color: #10b981; }
+            h2 { margin-top: 32px; border-bottom: 2px solid #eee; padding-bottom: 6px; }
+            .question { margin-bottom: 16px; padding: 12px; background: #f8f8f8; border-radius: 8px; }
+            .q-label { font-size: 11px; text-transform: uppercase; color: #888; margin: 0; }
+            .q-text { font-weight: bold; margin: 4px 0; }
+            .q-meta { font-size: 13px; margin: 4px 0; }
+            ul { padding-left: 20px; }
+            .severity-high { color: #ef4444; font-weight: bold; }
+            .severity-medium { color: #eab308; font-weight: bold; }
+            .severity-low { color: #10b981; font-weight: bold; }
+            .plan-day { margin-bottom: 12px; }
+            .plan-day-title { font-weight: bold; margin-bottom: 4px; }
+        </style>
+    </head>
+    <body>
+        <h1>${title}</h1>
+        <p class="score">Match Score: ${matchScore}%</p>
+
+        <h2>Technical Questions</h2>
+        ${questionsHtml(technicalQuestions, "Technical")}
+
+        <h2>Behavioral Questions</h2>
+        ${questionsHtml(behavioralQuestions, "Behavioral")}
+
+        <h2>Skill Gaps</h2>
+        <ul>${skillGapsHtml}</ul>
+
+        <h2>Preparation Plan</h2>
+        ${planHtml}
+    </body>
+    </html>
+    `
+}
+
+async function generateReportPdf(report) {
+    const html = await buildReportHtml(report)
+    return await generatePdfFromHtml(html)
+}
+
+module.exports = {generateInterviewReport,generateResumePdf, generateReportPdf}

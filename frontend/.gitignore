@@ -27,6 +27,8 @@ node_modules/
 
 # Environment variables
 .env
+.env.production
+dist
 
 # Logs
 *.log

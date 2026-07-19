@@ -4,9 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand",
     "dev": "npx nodemon server.js",
     "start": "node server.js"
+  },
+  "jest": {
+    "rootDir": "../",
+    "testMatch": [
+      "<rootDir>/tests/backend/**/*.test.js"
+    ],
+    "modulePaths": ["<rootDir>/backend/node_modules"]
   },
   "keywords": [],
   "author": "",
@@ -26,5 +33,10 @@
     "puppeteer": "^25.3.0",
     "zod": "^3.25.76",
     "zod-to-json-schema": "^3.25.2"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.2.0",
+    "supertest": "^7.2.2"
   }
 }

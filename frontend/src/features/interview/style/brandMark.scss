@@ -1,0 +1,57 @@
+.brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 800;
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-navy);
+        color: var(--color-accent);
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
+
+    &__text {
+        color: var(--color-text);
+        white-space: nowrap;
+
+        em {
+            font-style: normal;
+            color: var(--color-accent);
+        }
+    }
+
+    /* ── Sizes ── */
+    &--sm {
+        .brand-mark__icon { width: 26px; height: 26px; }
+        .brand-mark__text { font-size: 0.95rem; }
+    }
+
+    &--md {
+        .brand-mark__icon { width: 32px; height: 32px; }
+        .brand-mark__text { font-size: 1.1rem; }
+    }
+
+    &--lg {
+        .brand-mark__icon { width: 40px; height: 40px; }
+        .brand-mark__text { font-size: 1.35rem; }
+    }
+
+    /* ── Pill variant (dark background wrapping everything) ── */
+    &--pill {
+        background: var(--color-navy);
+        padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+        border-radius: var(--radius-full);
+
+        .brand-mark__icon {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-mark__text {
+            color: #fff;
+        }
+    }
+}

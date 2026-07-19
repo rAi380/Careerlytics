@@ -1,0 +1,185 @@
+.app-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.25rem;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    transition: width var(--transition-med), padding var(--transition-med);
+
+    &--collapsed {
+        width: 72px;
+        padding: 1.5rem 0.75rem;
+    }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.75rem;
+        min-height: 34px;
+    }
+
+    &__brand {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--color-text);
+        white-space: nowrap;
+    }
+
+    &__toggle {
+        background: transparent;
+        border: 1px solid var(--color-border);
+        color: var(--color-text-muted);
+        border-radius: var(--radius-sm);
+        padding: 0.4rem;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background var(--transition-fast), color var(--transition-fast);
+
+        &:hover {
+            background: var(--color-accent-soft);
+            color: var(--color-accent);
+        }
+    }
+
+    &__logout {
+        margin-top: auto;
+        background: transparent;
+        border: 1px solid var(--color-border);
+        color: var(--color-text-muted);
+        padding: 0.65rem 0.75rem;
+        border-radius: var(--radius-md);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+
+        &:hover {
+            background: var(--color-accent-soft);
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+    }
+}
+
+// ── Nav list ──
+.sidebar__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+}
+
+.sidebar__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow: hidden;
+}
+
+.sidebar__item {
+    block-size: 46px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    block-size: 100%;
+    padding-inline: 0.75rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+    transition:
+        background 0.35s var(--ease),
+        color 0.25s ease,
+        transform 0.25s ease,
+        border-radius 0.35s var(--ease);
+
+    &--heading {
+        align-items: center;
+    }
+
+    &:hover {
+        background: var(--color-surface-hover);
+        color: var(--color-text);
+        transform: translateX(2px);
+    }
+
+    &--active {
+        background: var(--color-navy);
+        color: #fff;
+
+        &:hover {
+            transform: none;
+        }
+    }
+}
+
+.item__icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.item--active .item__icon {
+    transform: scale(1.1);
+}
+
+.item__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 200;
+        width: 88vw;
+        transform: translateX(-100%);
+        transition: transform var(--transition-med);
+        box-shadow: none;
+
+        &--mobile-open {
+            transform: translateX(0);
+            box-shadow: var(--shadow-modal);
+        }
+
+        &--collapsed {
+            width: 260px;
+            padding: 1.5rem 1rem;
+        }
+    }
+
+    .app-sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 150;
+        animation: sidebar-fade-in 0.15s ease;
+    }
+}
+
+@keyframes sidebar-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

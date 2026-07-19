@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL:"http://localhost:3000",
-    withCredentials:true
+    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+    withCredentials: true
 })
 
 
@@ -40,14 +40,29 @@ export const getInterviewReportById = async (interviewId)=>{
  */
 
 export const getAllInterviewReports = async () =>{
-    const response = await api.get("/api/interview/")
-    
+    try{
+        const response = await api.get("/api/interview/")
+        return response.data
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const generateResumePdf = async ( interviewReportId ) =>{
+    const response = await api.post(`/api/interview/resume/pdf/${interviewReportId}`,null,{
+        responseType:"blob"
+    })
     return response.data
 }
 
-export const generateResumePdf = async ({ interviewReportId }) =>{
-    const response = await api.post('/api/interview/resume/pdf/${interviewReportId}',null,{
-        responseType:"blob"
+export const deleteInterviewReport = async (interviewId) => {
+    const response = await api.delete(`/api/interview/${interviewId}`)
+    return response.data;
+}
+
+export const generateReportPdf = async (interviewReportId) => {
+    const response = await api.post(`/api/interview/report/pdf/${interviewReportId}`, null, {
+        responseType: "blob"
     })
     return response.data
 }
