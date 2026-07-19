@@ -82,14 +82,10 @@ async function generatePdfFromHtml(htmlContent) {
         const chromiumPkg = require("@sparticuz/chromium")
         const chromium = chromiumPkg.default || chromiumPkg
 
-        const executablePath = await chromium.executablePath(
-            `https://github.com/Sparticuz/chromium/releases/download/v149.0.0/chromium-v149.0.0-pack.tar`
-        )
-
         browser = await puppeteerCore.launch({
-            args: chromium.args,
-            executablePath,
-            headless: chromium.headless
+            args: await puppeteerCore.defaultArgs({ args: chromium.args, headless: "shell" }),
+            executablePath: await chromium.executablePath(),
+            headless: "shell"
         })
     } else {
         const puppeteer = require("puppeteer")
