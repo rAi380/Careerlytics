@@ -2,8 +2,7 @@
  
 An AI-powered interview preparation platform that analyzes your resume, job description, and background to generate a targeted, structured interview strategy — technical & behavioral questions, skill gap analysis, a day-by-day preparation roadmap, and an ATS-friendly tailored resume.
  
-**Live demo:** [your Vercel URL]
-**Backend API:** [your Render URL]
+**Live demo:** https://careerlytics-ten.vercel.app
  
 ---
  
