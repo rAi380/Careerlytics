@@ -53,7 +53,7 @@ An AI-powered interview preparation platform that analyzes your resume, job desc
 ### 1. Clone the repository
  
 ```bash
-git clone https://github.com/your-username/Careerlytics.git
+git clone https://github.com/rAi380/Careerlytics.git
 cd Careerlytics
 ```
  
